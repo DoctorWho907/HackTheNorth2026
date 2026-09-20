@@ -23,7 +23,7 @@ try:
 except Exception as e:
     gemini_status = f"init failed: {e}"
     print("Gemini init warning:", e)
-
+ # please dont change prompts, they work as they are now.
 PROMPTS = {
     "describe": (
         "You are the eyes for a blind person walking. FIRST, warn about any "
