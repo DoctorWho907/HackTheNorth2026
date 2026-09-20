@@ -6,19 +6,19 @@ import requests
 from flask import Flask, send_file, Response
 import hardware
 
-# ================= EDIT THESE =================
-GEMINI_API_KEY  = "PASTE_YOUR_GEMINI_KEY_HERE"
-ELEVEN_API_KEY  = "PASTE_YOUR_ELEVENLABS_KEY_HERE"
-ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"
-GEMINI_MODEL    = "gemini-2.5-flash"
-# =============================================
+# parameters 
+gemini_key  = "gem"
+eleven_key  = "eleven"
+eleven_voice = "21m00Tcm4TlvDq8ikWAM" 
+gemini_model    = "gemini-3.6-flash"
+
 
 gemini_client = None
 gemini_status = "not initialised"
 try:
     from google import genai
     from google.genai import types
-    gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+    gemini_client = genai.Client(api_key=gemini_key)
     gemini_status = "ok"
 except Exception as e:
     gemini_status = f"init failed: {e}"
@@ -78,7 +78,7 @@ def gemini_describe(mode):
     prompt = PROMPTS.get(mode, PROMPTS["describe"])
     try:
         resp = gemini_client.models.generate_content(
-            model=GEMINI_MODEL,
+            model=gemini_model,
             contents=[
                 types.Part.from_bytes(data=buf.tobytes(), mime_type="image/jpeg"),
                 prompt,
@@ -92,8 +92,8 @@ def gemini_describe(mode):
 
 
 def tts_audio(text, urgent=False):
-    url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVEN_VOICE_ID}"
-    headers = {"xi-api-key": ELEVEN_API_KEY, "Content-Type": "application/json"}
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{eleven_voice}"
+    headers = {"xi-api-key": eleven_key, "Content-Type": "application/json"}
     vs = {"stability": 0.35 if urgent else 0.55, "similarity_boost": 0.75}
     data = {"text": text, "model_id": "eleven_turbo_v2", "voice_settings": vs}
     try:
@@ -130,7 +130,7 @@ def act(mode):
 
 @app.route("/status")
 def status():
-    return {"gemini": gemini_status, "model": GEMINI_MODEL}
+    return {"gemini": gemini_status, "model": gemini_model}
 
 
 PHONE_PAGE = """<!DOCTYPE html>
