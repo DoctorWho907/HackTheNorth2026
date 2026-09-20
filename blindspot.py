@@ -1,5 +1,4 @@
-# BlindSpot v2 - main (Gemini + ElevenLabs + web)
-# Run: python3 blindspot.py   |   Phone (same hotspot): http://<PI_IP>:5000
+# BlindSpot v2 - gem and eleven
 
 import io
 import cv2
